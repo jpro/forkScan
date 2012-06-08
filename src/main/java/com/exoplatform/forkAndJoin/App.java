@@ -1,28 +1,36 @@
 package com.exoplatform.forkAndJoin;
 
-import jsr166y.RecursiveTask;
+import jsr166y.ForkJoinPool;
 
 /**
- *
+ * Created with IntelliJ IDEA.
+ * User: dozie
+ * Date: 08.06.12
+ * Time: 10:02
  */
-public class App 
-{
-    public static void main(String... args)
-    {
-        System.out.println( "some test" );
-        //new ForkJoinPool().invoke(new ValueSumCounter(10));
-    }
-}
+public class App {
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Usage: java -jar fork.jar \"path\" \"nested level\"\nFor example: java -jar fork.jar /usr 2");
+            System.exit(-1);
+        }
 
-class ValueSumCounter extends RecursiveTask<Integer>{
-    private Integer var;
+        String path = "";
+        int level = 0;
 
-    public ValueSumCounter(Integer var) {
-        this.var = var;
-    }
+        try {
+            path = args[0];
+            level = Integer.parseInt(args[1]);
+        } catch (IndexOutOfBoundsException e2) {
+            System.out.println("Wrong arguments.");
+            System.exit(-1);
+        } catch (NumberFormatException e1) {
+            System.out.println("Wrong level.");
+            System.exit(-1);
+        }
 
-    @Override
-    protected Integer compute() {
-        return var;
+        ForkJoinPool fjPool = new ForkJoinPool();
+        fjPool.invoke(new ForkTask(path, level));
+
     }
 }
