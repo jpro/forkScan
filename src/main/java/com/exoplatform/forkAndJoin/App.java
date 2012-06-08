@@ -2,6 +2,10 @@ package com.exoplatform.forkAndJoin;
 
 import jsr166y.ForkJoinPool;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * Created with IntelliJ IDEA.
  * User: dozie
@@ -30,6 +34,12 @@ public class App {
         }
 
         /**
+         * Подсчитаем сколько времени было затрачено на операцию
+         * устанавливаем стартовое значение времени
+         */
+         FileStats.controlStartTime = System.currentTimeMillis();
+
+        /**
          * Запускаем
          */
         ForkJoinPool fjPool = new ForkJoinPool();
@@ -43,5 +53,6 @@ public class App {
         System.out.println("Dir count: " + FileStats.dirCount + "\nFiles count: " + FileStats.filesCount);
         System.out.println("Summary file size: " + FileStats.summaryFileSize + " bytes (" + ((float) FileStats.summaryFileSize / 1024 / 1024 / 1024) + " Gb)");
         System.out.println("Single reading: " + FileStats.singleReading + "\nParallels reading: " + FileStats.parallelsReading);
+        System.out.println("Used time : " + (FileStats.controlEndTime - FileStats.controlStartTime) + " milliseconds");
     }
 }

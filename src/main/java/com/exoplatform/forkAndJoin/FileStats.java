@@ -1,5 +1,7 @@
 package com.exoplatform.forkAndJoin;
 
+import java.util.Calendar;
+
 /**
  * Created with IntelliJ IDEA.
  * Класс содержит информацию по чтению данных
@@ -21,4 +23,7 @@ class FileStats {
      * Количество прямых чтених
      */
     static int singleReading = 0;
+
+    static long controlStartTime = 0;
+    static long controlEndTime = 0;
 }

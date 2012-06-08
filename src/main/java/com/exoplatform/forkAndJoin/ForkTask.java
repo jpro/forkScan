@@ -81,6 +81,7 @@ public class ForkTask extends RecursiveAction {
                 invokeAll(taskList);
             }
         }
+        FileStats.controlEndTime = System.currentTimeMillis();
     }
 
     /**
