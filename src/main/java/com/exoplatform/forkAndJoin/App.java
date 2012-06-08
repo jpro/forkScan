@@ -10,8 +10,12 @@ import jsr166y.ForkJoinPool;
  */
 public class App {
     public static void main(String[] args) {
+
+        /**
+         * Распирсиваем входящий аргумент в коммандной строке, который отвечает за путь просмотра
+         */
         if (args.length == 0) {
-            System.out.println("Usage: java -jar fork.jar \"path\" \"nested level\"\nFor example: java -jar fork.jar /usr 2");
+            System.out.println("Usage: java -jar fork.jar \"path\"\nFor example: java -jar fork.jar /usr");
             System.exit(-1);
         }
 
@@ -20,17 +24,24 @@ public class App {
 
         try {
             path = args[0];
-            level = Integer.parseInt(args[1]);
-        } catch (IndexOutOfBoundsException e2) {
-            System.out.println("Wrong arguments.");
-            System.exit(-1);
-        } catch (NumberFormatException e1) {
-            System.out.println("Wrong level.");
+        } catch (IndexOutOfBoundsException ex) {
+            System.out.println("Wrong argument.");
             System.exit(-1);
         }
 
+        /**
+         * Запускаем
+         */
         ForkJoinPool fjPool = new ForkJoinPool();
-        fjPool.invoke(new ForkTask(path, level));
+        fjPool.invoke(new ForkTask(path));
 
+        /**
+         * Вывод статистики по чтению
+         */
+        System.out.println("Available proc cores: " + Runtime.getRuntime().availableProcessors());
+        System.out.println("Read path: " + path);
+        System.out.println("Dir count: " + FileStats.dirCount + "\nFiles count: " + FileStats.filesCount);
+        System.out.println("Summary file size: " + FileStats.summaryFileSize + " bytes (" + ((float) FileStats.summaryFileSize / 1024 / 1024 / 1024) + " Gb)");
+        System.out.println("Single reading: " + FileStats.singleReading + "\nParallels reading: " + FileStats.parallelsReading);
     }
 }

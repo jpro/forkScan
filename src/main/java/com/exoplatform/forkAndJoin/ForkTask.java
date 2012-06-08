@@ -2,41 +2,101 @@ package com.exoplatform.forkAndJoin;
 
 import jsr166y.RecursiveAction;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
+ * Класс считывает файлы и директории по определенному пути
  * User: dozie
  * Date: 08.06.12
  * Time: 10:04
  */
 public class ForkTask extends RecursiveAction {
     String searchPath;
-    final int level;
+    File file;
+    File[] listFiles;
 
-    ForkTask(String searchPath, int level) {
+    /**
+     * Дочерние директории являются будущими задачами для подальшего чтения
+     */
+    ArrayList<ForkTask> taskList = new ArrayList<ForkTask>();
+
+    /**
+     * Количество дочерних директорий
+     */
+    int directoryCount = 0;
+
+    /**
+     * На вход поступает путь(директория) в которой следует произвести чтение
+     * @param searchPath
+     */
+    ForkTask(String searchPath) {
         this.searchPath = searchPath;
-        this.level = level;
+        file = new File(searchPath);
+        listFiles = file.listFiles();
+        init();
     }
 
-    protected void compute() {
-        File file = new File(searchPath);
-        File[] listFiles = file.listFiles();
-        ArrayList<ForkTask> taskList = new ArrayList<ForkTask>();
-
-        if (level >= 0) {
-            if (listFiles != null) {
-                for(File currentFile: listFiles) {
-                    if (currentFile.isDirectory()) {
-                        System.out.println("(d): " + currentFile.getAbsoluteFile());
-                    } else {
-                        System.out.println("(f): " + currentFile.getAbsolutePath() + " Size: " + currentFile.length() + " bytes");
-                    }
-                    taskList.add(new ForkTask(currentFile.getAbsolutePath(), level - 1));
+    /**
+     * Берет список текущей директории и считает сколько в ней файлов, дироекторий.
+     */
+    private void init() {
+        if (listFiles != null) {
+            for(File currentFile: listFiles) {
+                if (currentFile.isDirectory() && !isLink(currentFile)) {
+                    directoryCount++;
+                    FileStats.dirCount++;
+                } else if (currentFile.isFile() && !isLink(currentFile)) {
+                    FileStats.filesCount++;
+                    FileStats.summaryFileSize += currentFile.length();
                 }
             }
         }
+    }
 
-        invokeAll(taskList);
+    /**
+     * Считывает файлы и папки с определенной директории, если вложенных директорий в текущей больше 10, то чтение
+     * дочерних директорий происходит в отдельных задачах, иначе в одной.
+     */
+    protected void compute() {
+        if (listFiles != null) {
+            if (directoryCount <= 10) {
+                for(File currentFile: listFiles) {
+                    ForkTask task = null;
+                    if (!isLink(currentFile)) {
+                        task = new ForkTask(currentFile.getAbsolutePath());
+                        FileStats.singleReading++;
+                        task.compute();
+                    }
+                }
+            } else {
+                for(File currentFile: listFiles) {
+                    if (!isLink(currentFile)) {
+                        taskList.add(new ForkTask(currentFile.getAbsolutePath()));
+                        FileStats.parallelsReading++;
+                    }
+                }
+                invokeAll(taskList);
+            }
+        }
+    }
+
+    /**
+     * Проверяет, является ли файл ссылкой
+     * @param file
+     * @return
+     */
+    private boolean isLink(File file) {
+        try {
+            String canonicalPath = file.getCanonicalPath();
+            String absolutePath = file.getAbsolutePath();
+            return !absolutePath.equals(canonicalPath);
+        } catch (IOException ex) {
+            System.out.println(ex);
+            System.exit(-1);
+        }
+        return false;
     }
 }
