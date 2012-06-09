@@ -1,10 +1,10 @@
 package com.exoplatform.forkAndJoin;
 
 import jsr166y.RecursiveAction;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -63,22 +63,37 @@ public class ForkTask extends RecursiveAction {
     protected void compute() {
         if (listFiles != null) {
             if (directoryCount <= 10) {
+                FileStats.singleReading++;
                 for(File currentFile: listFiles) {
+                    //System.out.println(currentFile.getAbsolutePath());
                     ForkTask task = null;
                     if (!isLink(currentFile)) {
                         task = new ForkTask(currentFile.getAbsolutePath());
-                        FileStats.singleReading++;
                         task.compute();
                     }
                 }
             } else {
+                FileStats.parallelsReading++;
                 for(File currentFile: listFiles) {
+                    //System.out.println(currentFile.getAbsolutePath());
                     if (!isLink(currentFile)) {
                         taskList.add(new ForkTask(currentFile.getAbsolutePath()));
-                        FileStats.parallelsReading++;
                     }
                 }
-                invokeAll(taskList);
+
+                /**
+                 * Форкаем каждую задачу invokeAll(taskList);
+                 */
+                for (ForkTask currentTask: taskList) {
+                    currentTask.fork();
+                }
+
+                /**
+                 * Дожидаемся виполнения задач
+                 */
+                for (ForkTask currentTask: taskList) {
+                    currentTask.join();
+                }
             }
         }
         FileStats.controlEndTime = System.currentTimeMillis();
