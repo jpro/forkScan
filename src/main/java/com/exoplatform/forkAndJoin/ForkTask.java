@@ -83,13 +83,6 @@ public class ForkTask extends RecursiveAction {
                  * Форкаем все задачи
                  */
                 invokeAll(taskList);
-
-                /**
-                 * Дожидаемся виполнения задач
-                 */
-                for (ForkTask currentTask: taskList) {
-                    currentTask.join();
-                }
             }
         }
         FileStats.controlEndTime = System.currentTimeMillis();
