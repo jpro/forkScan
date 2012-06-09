@@ -80,11 +80,9 @@ public class ForkTask extends RecursiveAction {
                 }
 
                 /**
-                 * Форкаем каждую задачу invokeAll(taskList);
+                 * Форкаем все задачи
                  */
-                for (ForkTask currentTask: taskList) {
-                    currentTask.fork();
-                }
+                invokeAll(taskList);
 
                 /**
                  * Дожидаемся виполнения задач
