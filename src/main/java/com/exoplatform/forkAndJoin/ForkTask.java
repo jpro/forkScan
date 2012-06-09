@@ -34,7 +34,7 @@ public class ForkTask extends RecursiveAction {
      */
     ForkTask(String searchPath) {
         this.searchPath = searchPath;
-        file = new File(searchPath);
+        file = new File(this.searchPath);
         listFiles = file.listFiles();
         init();
     }
