@@ -65,7 +65,6 @@ public class ForkTask extends RecursiveAction {
             if (directoryCount <= 10) {
                 FileStats.singleReading++;
                 for(File currentFile: listFiles) {
-                    //System.out.println(currentFile.getAbsolutePath());
                     ForkTask task = null;
                     if (!isLink(currentFile)) {
                         task = new ForkTask(currentFile.getAbsolutePath());
@@ -75,7 +74,6 @@ public class ForkTask extends RecursiveAction {
             } else {
                 FileStats.parallelsReading++;
                 for(File currentFile: listFiles) {
-                    //System.out.println(currentFile.getAbsolutePath());
                     if (!isLink(currentFile)) {
                         taskList.add(new ForkTask(currentFile.getAbsolutePath()));
                     }
