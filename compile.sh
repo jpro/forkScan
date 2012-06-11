@@ -1,6 +1,6 @@
 #!/bin/bash
+rm -r -f target
 mvn install
-rm -r target
 cd target/classes
 jar -cvfm forkScan.jar ../../src/MANIFEST.MF com/exoplatform/forkScan/*.class
 cd ..
