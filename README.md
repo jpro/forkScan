@@ -14,7 +14,7 @@ forkScan is a utilite that help you calculate files size, file and directories c
       No minimum requirment.
 
     Operating system:
-      No minimum requirment. Linux, Windows or Mac OS X. Tested on openSuse 11.2.
+      No minimum requirment. Linux, Windows or Mac OS X. Tested on openSuse 11.2(JDK 1.6.0_32 x64).
 
     Other tools:
       Maven 2 or higher.(For compilation)
