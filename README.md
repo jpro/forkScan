@@ -38,8 +38,3 @@ http://img854.imageshack.us/img854/9711/shot2.png
 http://img687.imageshack.us/img687/4302/shot3x.png
 
 http://img560.imageshack.us/img560/391/shot4.png
-
-#### Realease notes
-- v1.0.0 (11.06.12)
-
-    Release.
