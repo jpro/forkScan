@@ -51,7 +51,8 @@ public class ForkTask extends RecursiveTask<Long> {
     }
 
     /**
-     * Read nested files and directories. If nested directories are over 10, then reading is performed by multitasking otherwise in one task.
+     * Read nested files and directories. If nested directories are over 10,
+     * then reading is performed by multitasking otherwise in one task.
      */
     protected Long compute() {
         long res = 0;
