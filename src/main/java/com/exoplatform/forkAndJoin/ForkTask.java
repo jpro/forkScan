@@ -1,6 +1,11 @@
 package com.exoplatform.forkAndJoin;
 
+<<<<<<< HEAD
 import jsr166y.RecursiveTask;
+=======
+import jsr166y.RecursiveAction;
+
+>>>>>>> b0e68177a2251711809c2d805cd8a6f275f1e977
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +35,12 @@ public class ForkTask extends RecursiveTask<Long> {
      * @param searchPath - path for get list of nested files
      */
     ForkTask(String searchPath) {
+<<<<<<< HEAD
         File file = new File(searchPath);
+=======
+        this.searchPath = searchPath;
+        file = new File(this.searchPath);
+>>>>>>> b0e68177a2251711809c2d805cd8a6f275f1e977
         listFiles = file.listFiles();
     }
 
@@ -57,8 +67,13 @@ public class ForkTask extends RecursiveTask<Long> {
         long res = 0;
         init();
         if (listFiles != null) {
+<<<<<<< HEAD
             if (localDirectoryCount <= 10) {
                 Statistic.getInstance().setSingleReading(Statistic.getInstance().getSingleReading() + 1);
+=======
+            if (directoryCount <= 10) {
+                FileStats.singleReading++;
+>>>>>>> b0e68177a2251711809c2d805cd8a6f275f1e977
                 for(File currentFile: listFiles) {
                     ForkTask task = null;
                     if(!isLink(currentFile)) {
@@ -66,20 +81,37 @@ public class ForkTask extends RecursiveTask<Long> {
                     }
                     if (!isLink(currentFile) && currentFile.isDirectory()) {
                         task = new ForkTask(currentFile.getAbsolutePath());
+<<<<<<< HEAD
                         res += task.compute();
                     }
                 }
             } else {
                 Statistic.getInstance().setParallelsReading(Statistic.getInstance().getParallelsReading() + 1);
+=======
+                        task.compute();
+                    }
+                }
+            } else {
+                FileStats.parallelsReading++;
+>>>>>>> b0e68177a2251711809c2d805cd8a6f275f1e977
                 for(File currentFile: listFiles) {
                     if (!isLink(currentFile) && currentFile.isDirectory()) {
                         taskList.add(new ForkTask(currentFile.getAbsolutePath()));
+<<<<<<< HEAD
                     }
                     if(!isLink(currentFile)) {
                         res += currentFile.length();
                     }
                 }
 
+=======
+                    }
+                }
+
+                /**
+                 * Форкаем все задачи
+                 */
+>>>>>>> b0e68177a2251711809c2d805cd8a6f275f1e977
                 invokeAll(taskList);
 
                 for (ForkTask currentTask: taskList) {
