@@ -20,8 +20,14 @@ forkScan is a utilite that help you calculate files size, file and directories c
       Maven 2 or higher.(For compilation)
 
 #### Installing forkScan
-Download https://github.com/jpro/forkScan/blob/master/files/forkScan.jar executable jar.
-Go to folder which consist forkScan.jar. Then run in command line:
+Download all files.
+Go to folder which consist compile.sh. Then run in command line:
+
+	#chmod +x
+
+	#./compile.sh
+
+	#cd target
 
 	#java -jar forkScan.jar path thread_count
 where:
