@@ -1,30 +1,22 @@
 package com.exoplatform.forkAndJoin;
 
 import jsr166y.ForkJoinPool;
-
-import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-/**
- * Created with IntelliJ IDEA.
- * User: dozie
- * Date: 08.06.12
- * Time: 10:02
- */
 public class App {
-    public static void main(String[] args) {
+    private static String path = "";
 
-        /**
-         * Распирсиваем входящий аргумент в коммандной строке, который отвечает за путь просмотра
-         */
+    /**
+     * Main method
+     * @param args - command line arguments
+     */
+    public static void main(String[] args) {
         if (args.length == 0) {
-            System.out.println("Usage: java -jar fork.jar \"path\"\nFor example: java -jar fork.jar /usr");
+            System.out.println("Usage: java -jar fork.jar \"path\"");
             System.exit(-1);
         }
-
-        String path = "";
-        int level = 0;
 
         try {
             path = args[0];
@@ -33,26 +25,50 @@ public class App {
             System.exit(-1);
         }
 
-        /**
-         * Подсчитаем сколько времени было затрачено на операцию
-         * устанавливаем стартовое значение времени
-         */
-         FileStats.controlStartTime = System.currentTimeMillis();
+        App application = new App();
 
-        /**
-         * Запускаем
-         */
-        ForkJoinPool fjPool = new ForkJoinPool();
-        fjPool.invoke(new ForkTask(path));
+        application.start(-1);
+        application.start(1);
+        application.start(2);
+        application.start(4);
+        application.start(8);
+        application.start(16);
+        application.start(32);
+    }
 
-        /**
-         * Вывод статистики по чтению
-         */
-        System.out.println("Available proc cores: " + Runtime.getRuntime().availableProcessors());
-        System.out.println("Read path: " + path);
-        System.out.println("Dir count: " + FileStats.dirCount + "\nFiles count: " + FileStats.filesCount);
-        System.out.println("Summary file size: " + FileStats.summaryFileSize + " bytes (" + ((float) FileStats.summaryFileSize / 1024 / 1024 / 1024) + " Gb)");
-        System.out.println("Single reading: " + FileStats.singleReading + "\nParallels reading: " + FileStats.parallelsReading);
-        System.out.println("Used time : " + (FileStats.controlEndTime - FileStats.controlStartTime) + " milliseconds");
+    /**
+     * Start method. Run task with given parallelism level.
+     * @param parallelismLevel - parallelism level. If level is -1, that parallelism level set to default of the system.
+     */
+    public void start(int parallelismLevel) {
+        ForkJoinPool forkJoinPool;
+
+        Statistic.getInstance().setControlStartTime(System.currentTimeMillis());
+
+        System.out.println("Start: " + getTime());
+        System.out.println("Path: " + path);
+        System.out.println("Parallelism level: " + ((parallelismLevel == -1)?"default":parallelismLevel));
+
+        if (parallelismLevel == -1) {
+            forkJoinPool = new ForkJoinPool();
+        } else {
+            forkJoinPool = new ForkJoinPool(parallelismLevel);
+        }
+        forkJoinPool.invoke(new ForkTask(path));
+
+        System.out.println(Statistic.getInstance().toString());
+        System.out.println("End: " + getTime() + "\n\n");
+
+        Statistic.getInstance().cleanStatistic();
+    }
+
+    /**
+     * Get formatted current time
+     * @return Human time format
+     */
+    private String getTime() {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

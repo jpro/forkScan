@@ -1,103 +1,116 @@
 package com.exoplatform.forkAndJoin;
 
-import jsr166y.RecursiveAction;
+import jsr166y.RecursiveTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
- * Created with IntelliJ IDEA.
- * Класс считывает файлы и директории по определенному пути
- * User: dozie
- * Date: 08.06.12
- * Time: 10:04
+ * Class, that implement algorithm for reading files and dirs from given path
  */
-public class ForkTask extends RecursiveAction {
-    String searchPath;
-    File file;
-    File[] listFiles;
+public class ForkTask extends RecursiveTask<Long> {
 
     /**
-     * Дочерние директории являются будущими задачами для подальшего чтения
+     * List of files and directories in current path
      */
-    ArrayList<ForkTask> taskList = new ArrayList<ForkTask>();
+    private File[] listFiles;
 
     /**
-     * Количество дочерних директорий
+     * Nested directories is a future task
      */
-    int directoryCount = 0;
+    private ArrayList<ForkTask> taskList = new ArrayList<ForkTask>();
 
     /**
-     * На вход поступает путь(директория) в которой следует произвести чтение
-     * @param searchPath
+     * Count nested directories
+     */
+    private int localDirectoryCount = 0;
+
+    /**
+     * Attempt to get list of files in search path
+     * @param searchPath - path for get list of nested files
      */
     ForkTask(String searchPath) {
-        this.searchPath = searchPath;
-        file = new File(searchPath);
+        File file = new File(searchPath);
         listFiles = file.listFiles();
-        init();
     }
 
     /**
-     * Берет список текущей директории и считает сколько в ней файлов, дироекторий.
+     * Give current path and count nested files and directories
      */
     private void init() {
         if (listFiles != null) {
             for(File currentFile: listFiles) {
                 if (currentFile.isDirectory() && !isLink(currentFile)) {
-                    directoryCount++;
-                    FileStats.dirCount++;
-                } else if (currentFile.isFile() && !isLink(currentFile)) {
-                    FileStats.filesCount++;
-                    FileStats.summaryFileSize += currentFile.length();
+                    localDirectoryCount++;
+                    Statistic.getInstance().setDirectoriesCount(Statistic.getInstance().getDirectoriesCount() + 1);
+                } else if(currentFile.isFile() && !isLink(currentFile)) {
+                    Statistic.getInstance().setFilesCount(Statistic.getInstance().getFilesCount() + 1);
                 }
             }
         }
     }
 
     /**
-     * Считывает файлы и папки с определенной директории, если вложенных директорий в текущей больше 10, то чтение
-     * дочерних директорий происходит в отдельных задачах, иначе в одной.
+     * Read nested files and directories. If nested directories are over 10, then reading is performed by multitasking otherwise in one task.
      */
-    protected void compute() {
+    protected Long compute() {
+        long res = 0;
+        init();
         if (listFiles != null) {
-            if (directoryCount <= 10) {
+            if (localDirectoryCount <= 10) {
+                Statistic.getInstance().setSingleReading(Statistic.getInstance().getSingleReading() + 1);
                 for(File currentFile: listFiles) {
                     ForkTask task = null;
-                    if (!isLink(currentFile)) {
+                    if(!isLink(currentFile)) {
+                        res += currentFile.length();
+                    }
+                    if (!isLink(currentFile) && currentFile.isDirectory()) {
                         task = new ForkTask(currentFile.getAbsolutePath());
-                        FileStats.singleReading++;
-                        task.compute();
+                        res += task.compute();
                     }
                 }
             } else {
+                Statistic.getInstance().setParallelsReading(Statistic.getInstance().getParallelsReading() + 1);
                 for(File currentFile: listFiles) {
-                    if (!isLink(currentFile)) {
+                    if (!isLink(currentFile) && currentFile.isDirectory()) {
                         taskList.add(new ForkTask(currentFile.getAbsolutePath()));
-                        FileStats.parallelsReading++;
+                    }
+                    if(!isLink(currentFile)) {
+                        res += currentFile.length();
                     }
                 }
+
                 invokeAll(taskList);
+
+                for (ForkTask currentTask: taskList) {
+                    res += currentTask.join();
+                }
             }
         }
-        FileStats.controlEndTime = System.currentTimeMillis();
+        Statistic.getInstance().setSummaryFilesSize(res);
+        Statistic.getInstance().setControlEndTime(System.currentTimeMillis());
+
+        return res;
     }
 
     /**
-     * Проверяет, является ли файл ссылкой
-     * @param file
-     * @return
+     * Check if given files is link
+     * @param file - current file for check
+     * @return - true if file is link and false - if file isn't link
      */
     private boolean isLink(File file) {
+        String canonicalPath = "";
+        String absolutePath = "";
         try {
-            String canonicalPath = file.getCanonicalPath();
-            String absolutePath = file.getAbsolutePath();
-            return !absolutePath.equals(canonicalPath);
+            canonicalPath = file.getCanonicalPath();
+            absolutePath = file.getAbsolutePath();
         } catch (IOException ex) {
             System.out.println(ex);
             System.exit(-1);
         }
-        return false;
+
+        return !absolutePath.equals(canonicalPath);
     }
+
+
 }
