@@ -7,40 +7,41 @@ import java.util.Date;
 
 public class App {
     private static String path = "";
-
+    private static int threadCount = 0;
     /**
      * Main method
      * @param args - command line arguments
      */
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.out.println("Usage: java -jar fork.jar \"path\"");
+            System.out.println("Usage: java -jar fork.jar \"path\" \"thread count\"\nThread count must be in range of 1 and 100");
             System.exit(-1);
         }
 
         try {
             path = args[0];
-        } catch (IndexOutOfBoundsException ex) {
+            threadCount = Integer.parseInt(args[1]);
+            if (threadCount <= 0 || threadCount > 100) throw new IllegalArgumentException("Threads count is abnormal.");
+        } catch (IndexOutOfBoundsException ex1) {
             System.out.println("Wrong argument.");
+            System.exit(-1);
+        } catch (NumberFormatException ex2) {
+            System.out.println("Wrong argument.");
+            System.exit(-1);
+        } catch (IllegalArgumentException ex3) {
+            System.out.println(ex3.getMessage());
             System.exit(-1);
         }
 
         App application = new App();
-
-        application.start(-1);
-        application.start(1);
-        application.start(2);
-        application.start(4);
-        application.start(8);
-        application.start(16);
-        application.start(32);
+        application.start(threadCount);
     }
 
     /**
      * Start method. Run task with given parallelism level.
      * @param parallelismLevel - parallelism level. If level is -1, that parallelism level set to default of the system.
      */
-    public void start(int parallelismLevel) {
+    private void start(int parallelismLevel) {
         ForkJoinPool forkJoinPool;
 
         Statistic.getInstance().setControlStartTime(System.currentTimeMillis());
@@ -57,9 +58,7 @@ public class App {
         forkJoinPool.invoke(new ForkTask(path));
 
         System.out.println(Statistic.getInstance().toString());
-        System.out.println("End: " + getTime() + "\n\n");
-
-        Statistic.getInstance().cleanStatistic();
+        System.out.println("End: " + getTime());
     }
 
     /**

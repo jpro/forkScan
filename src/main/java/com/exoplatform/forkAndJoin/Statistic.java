@@ -1,72 +1,66 @@
 package com.exoplatform.forkAndJoin;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
- * Class for keeping statistic for compute method
+ * Class for keeping statistic for compute() method
  */
 class Statistic {
-    private int directoriesCount = 0;
-    private int filesCount = 0;
-    private long summaryFilesSize = 0;
-    private int parallelsReading = 0;
-    private int singleReading = 0;
-    private long controlStartTime = 0;
-    private long controlEndTime = 0;
+    private AtomicInteger directoriesCount;
+    private AtomicInteger filesCount;
+    private AtomicLong summaryFilesSize;
+    private AtomicLong controlStartTime;
+    private AtomicLong controlEndTime;
     private static Statistic instance = new Statistic();
 
+    Statistic() {
+        directoriesCount = new AtomicInteger(0);
+        filesCount = new AtomicInteger(0);
+        summaryFilesSize = new AtomicLong(0);
+        controlStartTime = new AtomicLong(0);
+        controlEndTime = new AtomicLong(0);
+    }
+
     public void setDirectoriesCount(int count) {
-        directoriesCount = count;
+        directoriesCount.set(count);
+
     }
 
     public int getDirectoriesCount() {
-        return directoriesCount;
+        return directoriesCount.get();
     }
 
     public void setFilesCount(int count) {
-        filesCount = count;
+        filesCount.set(count);
     }
 
     public int getFilesCount() {
-        return filesCount;
+        return filesCount.get();
     }
 
     public void setSummaryFilesSize(long size) {
-        summaryFilesSize = size;
+        summaryFilesSize.set(size);
     }
 
     public long getSummaryFilesSize() {
-        return summaryFilesSize;
-    }
-
-    public int getParallelsReading() {
-        return parallelsReading;
-    }
-
-    public void setParallelsReading(int parallelsReading) {
-        this.parallelsReading = parallelsReading;
-    }
-
-    public int getSingleReading() {
-        return singleReading;
-    }
-
-    public void setSingleReading(int singleReading) {
-        this.singleReading = singleReading;
+        return summaryFilesSize.get();
     }
 
     public long getControlStartTime() {
-        return controlStartTime;
+        return controlStartTime.get();
     }
 
-    public void setControlStartTime(long controlStartTime) {
-        this.controlStartTime = controlStartTime;
+    public void setControlStartTime(long controlTime) {
+        controlStartTime.set(controlTime);
     }
 
     public long getControlEndTime() {
-        return controlEndTime;
+        return controlEndTime.get();
     }
 
-    public void setControlEndTime(long controlEndTime) {
-        this.controlEndTime = controlEndTime;
+    public void setControlEndTime(long controlTime) {
+        controlEndTime.set(controlTime);
     }
 
     public synchronized static Statistic getInstance() {
@@ -74,13 +68,11 @@ class Statistic {
     }
 
     public void cleanStatistic() {
-        directoriesCount = 0;
-        filesCount = 0;
-        summaryFilesSize = 0;
-        parallelsReading = 0;
-        singleReading = 0;
-        controlStartTime = 0;
-        controlEndTime = 0;
+        directoriesCount.set(0);
+        filesCount.set(0);
+        summaryFilesSize.set(0);
+        controlStartTime.set(0);
+        controlEndTime.set(0);
     }
 
     public static String humanReadableByteCount(long bytes) {
@@ -95,8 +87,6 @@ class Statistic {
         return  "Directories count: " + getDirectoriesCount() +
                 "\nFiles count: " + getFilesCount() +
                 "\nSummary file size: " + getSummaryFilesSize() + " bytes " + humanReadableByteCount(getSummaryFilesSize()) +
-                "\nSingle reading: " + getSingleReading() +
-                "\nParallels reading: " + getParallelsReading() +
                 "\nUsed time: " + (getControlEndTime() - getControlStartTime()) + " milliseconds";
     }
 }

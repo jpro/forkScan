@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Class, that implement algorithm for reading files and dirs from given path
  */
-public class ForkTask extends RecursiveTask<Long> {
+class ForkTask extends RecursiveTask<Long> {
 
     /**
      * List of files and directories in current path
@@ -59,7 +59,6 @@ public class ForkTask extends RecursiveTask<Long> {
         init();
         if (listFiles != null) {
             if (localDirectoryCount <= 10) {
-                Statistic.getInstance().setSingleReading(Statistic.getInstance().getSingleReading() + 1);
                 for(File currentFile: listFiles) {
                     ForkTask task = null;
                     if(!isLink(currentFile)) {
@@ -71,7 +70,6 @@ public class ForkTask extends RecursiveTask<Long> {
                     }
                 }
             } else {
-                Statistic.getInstance().setParallelsReading(Statistic.getInstance().getParallelsReading() + 1);
                 for(File currentFile: listFiles) {
                     if (!isLink(currentFile) && currentFile.isDirectory()) {
                         taskList.add(new ForkTask(currentFile.getAbsolutePath()));
@@ -111,6 +109,4 @@ public class ForkTask extends RecursiveTask<Long> {
 
         return !absolutePath.equals(canonicalPath);
     }
-
-
 }
