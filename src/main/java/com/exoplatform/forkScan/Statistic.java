@@ -4,77 +4,45 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Class for keeping statistic for compute() method
+ * Class for keeping statistic of working program
  */
-class Statistic {
-    private AtomicInteger directoriesCount;
-    private AtomicInteger filesCount;
-    private AtomicLong summaryFilesSize;
-    private AtomicLong controlStartTime;
-    private AtomicLong controlEndTime;
-    private static Statistic instance = new Statistic();
+public class Statistic {
+    private AtomicInteger directoriesCount = new AtomicInteger(0);
+    private AtomicInteger filesCount = new AtomicInteger(0);
+    private AtomicLong summaryFilesSize = new AtomicLong(0);
+    private AtomicLong controlEndTime = new AtomicLong(0);
+    private AtomicLong controlStartTime = new AtomicLong(0);
+    private String path = "";
+    private int threads = 0;
 
-    Statistic() {
-        directoriesCount = new AtomicInteger(0);
-        filesCount = new AtomicInteger(0);
-        summaryFilesSize = new AtomicLong(0);
-        controlStartTime = new AtomicLong(0);
-        controlEndTime = new AtomicLong(0);
+    public Statistic(long startTime) {
+        this.controlStartTime.set(startTime);
     }
 
-    public void setDirectoriesCount(int count) {
-        directoriesCount.set(count);
+    public void add(Statistic otherStat) {
+        filesCount.getAndAdd(otherStat.filesCount.get());
+        directoriesCount.getAndAdd(otherStat.directoriesCount.get());
+        summaryFilesSize.getAndAdd(otherStat.summaryFilesSize.get());
+        controlEndTime.set(otherStat.controlEndTime.get());
     }
 
-    public int getDirectoriesCount() {
-        return directoriesCount.get();
+    public void incFilesCount() {
+        filesCount.getAndIncrement();
     }
 
-    public void setFilesCount(int count) {
-        filesCount.set(count);
+    public void incDirectoriesCount() {
+        directoriesCount.getAndIncrement();
     }
 
-    public int getFilesCount() {
-        return filesCount.get();
+    public void addSummaryFilesSize(long size) {
+        summaryFilesSize.getAndAdd(size);
     }
 
-    public void setSummaryFilesSize(long size) {
-        summaryFilesSize.set(size);
+    public void setControlEndTime(long time) {
+        controlEndTime.set(time);
     }
 
-    public long getSummaryFilesSize() {
-        return summaryFilesSize.get();
-    }
-
-    public long getControlStartTime() {
-        return controlStartTime.get();
-    }
-
-    public void setControlStartTime(long controlTime) {
-        controlStartTime.set(controlTime);
-    }
-
-    public long getControlEndTime() {
-        return controlEndTime.get();
-    }
-
-    public void setControlEndTime(long controlTime) {
-        controlEndTime.set(controlTime);
-    }
-
-    public synchronized static Statistic getInstance() {
-        return instance;
-    }
-
-    public void cleanStatistic() {
-        directoriesCount.set(0);
-        filesCount.set(0);
-        summaryFilesSize.set(0);
-        controlStartTime.set(0);
-        controlEndTime.set(0);
-    }
-
-    public static String humanReadableByteCount(long bytes) {
+    private String humanReadableByteCount(long bytes) {
         int unit = 1024;
         if (bytes < unit) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
@@ -82,10 +50,35 @@ class Statistic {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setThreads(int threads) {
+        this.threads = threads;
+    }
+
+    @Override
     public String toString() {
-        return  "Directories count: " + getDirectoriesCount() +
-                "\nFiles count: " + getFilesCount() +
-                "\nSummary file size: " + getSummaryFilesSize() + " bytes " + humanReadableByteCount(getSummaryFilesSize()) +
-                "\nUsed time: " + (getControlEndTime() - getControlStartTime()) + " milliseconds";
+        StringBuilder separator = new StringBuilder();
+        for (int i = 0; i < 100; i++) { separator.append("-"); }
+        separator.append("\n");
+
+        StringBuilder result = new StringBuilder();
+        result.append(separator.toString());
+        result.append(String.format("|%-20s|%8s|%12s|%11s|%30s|%12s|\n", "Path", "Threads", "Directories", "Files", "Summary files size", "Used time"));
+        result.append(separator.toString());
+        result.append(String.format("|%-20s|%8d|%12d|%11d|%18db(%9s)|%10dms|\n",
+                path,
+                threads,
+                directoriesCount.get(),
+                filesCount.get(),
+                summaryFilesSize.get(),
+                humanReadableByteCount(summaryFilesSize.get()),
+                (controlEndTime.get() - controlStartTime.get()))
+        );
+        result.append(separator.toString());
+
+        return result.toString();
     }
 }
