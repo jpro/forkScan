@@ -31,14 +31,34 @@ public class App {
             System.exit(-1);
         }
 
-        (new App()).start(threadCount);
+        App app = new App();
+
+        app.startRecursive(threadCount);
+        app.startThread(threadCount);
+        app.startOptimized(threadCount);
     }
 
     /**
      * Start method. Run task with given parallelism level.
-     * @param threadCount - parallelism level. If level is -1, that parallelism level set to default of the system.
+     * @param threadCount - parallelism level.
      */
-    private void start(int threadCount) {
+    private void startOptimized(int threadCount) {
+        ForkJoinPool forkJoinPool = new ForkJoinPool(threadCount);
+
+        Statistic stat  = forkJoinPool.invoke(new ForkTaskOptimize(path));
+
+        stat.setPath(path);
+        stat.setThreads(threadCount);
+
+        System.out.println("Optimized algorithm");
+        System.out.println(stat.toString());
+    }
+
+    /**
+     * Start method. Run task with given parallelism level.
+     * @param threadCount - parallelism level.
+     */
+    private void startRecursive(int threadCount) {
         ForkJoinPool forkJoinPool = new ForkJoinPool(threadCount);
 
         Statistic stat = forkJoinPool.invoke(new ForkTaskRecursive(path));
@@ -48,29 +68,21 @@ public class App {
 
         System.out.println("Fully recursive algorithm");
         System.out.println(stat.toString());
+    }
 
+    /**
+     * Start method. Run task with given parallelism level.
+     * @param threadCount - parallelism level.
+     */
+    private void startThread(int threadCount) {
+        ForkJoinPool forkJoinPool = new ForkJoinPool(threadCount);
 
-
-
-        stat = forkJoinPool.invoke(new ForkTaskThread(path));
+        Statistic stat = forkJoinPool.invoke(new ForkTaskThread(path));
 
         stat.setPath(path);
         stat.setThreads(threadCount);
 
         System.out.println("Fully threaded algorithm");
         System.out.println(stat.toString());
-
-
-
-
-
-        stat = forkJoinPool.invoke(new ForkTaskOptimize(path));
-
-        stat.setPath(path);
-        stat.setThreads(threadCount);
-
-        System.out.println("Optimized algorithm");
-        System.out.println(stat.toString());
-
     }
 }
