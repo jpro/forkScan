@@ -47,7 +47,7 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startOptimized(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskOptimize(path)), "Threaded but optimized");
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskOptimize(path)), "Threaded but optimized", threadCount);
     }
 
     /**
@@ -55,7 +55,7 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startRecursive(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskRecursive(path)), "Fully recursive (1 thread)");
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskRecursive(path)), "Fully recursive (1 thread)", threadCount);
     }
 
     /**
@@ -63,7 +63,7 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startThread(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskThread(path)), "Fully threaded");
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskThread(path)), "Fully threaded", threadCount);
     }
 
     /**
@@ -71,9 +71,9 @@ public class App {
      * @param stat - statistic object from task
      * @param typeOfAlgorithm - name of algorithm
      */
-    private void printStatistic(Statistic stat, String typeOfAlgorithm) {
+    private void printStatistic(Statistic stat, String typeOfAlgorithm, int threads) {
         stat.setPath(path);
-        stat.setThreads(threadCount);
+        stat.setThreads(threads);
         System.out.println(typeOfAlgorithm + " algorithm");
         System.out.println(stat.toString());
     }
