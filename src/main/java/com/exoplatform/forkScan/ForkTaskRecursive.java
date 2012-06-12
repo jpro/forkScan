@@ -7,36 +7,25 @@ import java.io.File;
  * Class that allow to calculate files size recursively in one thread.
  */
 public class ForkTaskRecursive extends ForkTask {
+
+    /**
+     * Current path in which we must start viewing the file system for calculations
+     */
+    private File currentSearchPath;
+
     /**
      * Attempt to get list of files in search path.
      * @param searchPath - path for get list of nested files
      */
     ForkTaskRecursive(String searchPath) {
-        super(searchPath);
-    }
-
-    /**
-     * Give current path and count nested files and directories
-     */
-    protected void init() {
-        super.init();
-        if (listFiles != null) {
-            for(File currentFile: listFiles) {
-                if(!isLink(currentFile)) {
-                    stat.addSummaryFilesSize(currentFile.length());
-                }
-            }
-        }
+        currentSearchPath = new File(searchPath);
     }
 
     /**
      * Read nested files and directories in recursive form used one thread.
      */
     protected Statistic compute() {
-        init();
-        for (File currentFile: listFiles) {
-            stat.add(localRecursive(currentFile));
-        }
+        stat.add(localRecursive(currentSearchPath));
         stat.setControlEndTime(System.currentTimeMillis());
         return stat;
     }

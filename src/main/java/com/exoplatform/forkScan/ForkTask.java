@@ -36,9 +36,8 @@ abstract class ForkTask extends RecursiveTask<Statistic> {
      * Attempt to get list of files in search path
      * @param searchPath - path for get list of nested files
      */
-    ForkTask(String searchPath) {
-        File file = new File(searchPath);
-        listFiles = file.listFiles();
+    ForkTask() {
+
     }
 
     /**
@@ -46,21 +45,6 @@ abstract class ForkTask extends RecursiveTask<Statistic> {
      * @return - object statistic
      */
     protected abstract Statistic compute();
-
-    /**
-     * Give current path and count nested files and directories
-     */
-    protected void init() {
-        if (listFiles != null) {
-            for(File currentFile: listFiles) {
-                if (currentFile.isDirectory() && !isLink(currentFile)) {
-                    stat.incDirectoriesCount();
-                } else if(currentFile.isFile() && !isLink(currentFile)) {
-                    stat.incFilesCount();
-                }
-            }
-        }
-    }
 
     /**
      * Check if given files is link

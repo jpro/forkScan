@@ -15,7 +15,23 @@ public class ForkTaskThread extends ForkTask {
      * @param searchPath - path for get list of nested files
      */
     ForkTaskThread(String searchPath) {
-        super(searchPath);
+        File file = new File(searchPath);
+        listFiles = file.listFiles();
+    }
+
+    /**
+     * Give current path and count nested files and directories
+     */
+    protected void init() {
+        if (listFiles != null) {
+            for(File currentFile: listFiles) {
+                if (currentFile.isDirectory() && !isLink(currentFile)) {
+                    stat.incDirectoriesCount();
+                } else if(currentFile.isFile() && !isLink(currentFile)) {
+                    stat.incFilesCount();
+                }
+            }
+        }
     }
 
     /**

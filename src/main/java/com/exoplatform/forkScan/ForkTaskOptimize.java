@@ -16,18 +16,21 @@ public class ForkTaskOptimize extends ForkTask {
      * @param searchPath - path for get list of nested files
      */
     ForkTaskOptimize(String searchPath) {
-        super(searchPath);
+        File file = new File(searchPath);
+        listFiles = file.listFiles();
     }
 
     /**
      * Give current path and count nested files and directories
      */
     protected void init() {
-        super.init();
         if (listFiles != null) {
             for(File currentFile: listFiles) {
                 if (currentFile.isDirectory() && !isLink(currentFile)) {
                     localDirectoryCount++;
+                    stat.incDirectoriesCount();
+                } else if(currentFile.isFile() && !isLink(currentFile)) {
+                    stat.incFilesCount();
                 }
             }
         }
