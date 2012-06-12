@@ -8,7 +8,12 @@ import java.util.ArrayList;
 /**
  * Class, that implement algorithm for reading files and dirs from given path
  */
-class ForkTask extends RecursiveTask<Long> {
+class ForkTask extends RecursiveTask<Statistic> {
+
+    /**
+     * Create statistic for current directory
+     */
+    Statistic stat = new Statistic(System.currentTimeMillis());
 
     /**
      * List of files and directories in current path
@@ -42,9 +47,9 @@ class ForkTask extends RecursiveTask<Long> {
             for(File currentFile: listFiles) {
                 if (currentFile.isDirectory() && !isLink(currentFile)) {
                     localDirectoryCount++;
-                    Statistic.getInstance().setDirectoriesCount(Statistic.getInstance().getDirectoriesCount() + 1);
+                    stat.incDirectoriesCount();
                 } else if(currentFile.isFile() && !isLink(currentFile)) {
-                    Statistic.getInstance().setFilesCount(Statistic.getInstance().getFilesCount() + 1);
+                    stat.incFilesCount();
                 }
             }
         }
@@ -54,19 +59,19 @@ class ForkTask extends RecursiveTask<Long> {
      * Read nested files and directories. If nested directories are over 10,
      * then reading is performed by multitasking otherwise in one task.
      */
-    protected Long compute() {
-        long res = 0;
+    protected Statistic compute() {
         init();
         if (listFiles != null) {
             if (localDirectoryCount <= 10) {
                 for(File currentFile: listFiles) {
                     ForkTask task = null;
                     if(!isLink(currentFile)) {
-                        res += currentFile.length();
+                        stat.addSummaryFilesSize(currentFile.length());
                     }
                     if (!isLink(currentFile) && currentFile.isDirectory()) {
                         task = new ForkTask(currentFile.getAbsolutePath());
-                        res += task.compute();
+
+                        stat.add(task.compute());
                     }
                 }
             } else {
@@ -75,20 +80,19 @@ class ForkTask extends RecursiveTask<Long> {
                         taskList.add(new ForkTask(currentFile.getAbsolutePath()));
                     }
                     if(!isLink(currentFile)) {
-                        res += currentFile.length();
+                        stat.addSummaryFilesSize(currentFile.length());
                     }
                 }
 
                 invokeAll(taskList);
                 for (ForkTask currentTask: taskList) {
-                    res += currentTask.join();
+                    stat.add(currentTask.join());
                 }
             }
         }
-        Statistic.getInstance().setSummaryFilesSize(res);
-        Statistic.getInstance().setControlEndTime(System.currentTimeMillis());
+        stat.setControlEndTime(System.currentTimeMillis());
 
-        return res;
+        return stat;
     }
 
     /**
