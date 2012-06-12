@@ -15,10 +15,18 @@ public class Statistic {
     private String path = "";
     private int threads = 0;
 
+    /**
+     * Constructor that receives start time in milliseconds for calculate how long algorithm work
+     * @param startTime - current time in milliseconds
+     */
     public Statistic(long startTime) {
         this.controlStartTime.set(startTime);
     }
 
+    /**
+     * Summarize two objects of statistic for store general stats value
+     * @param otherStat - other input object of statistic
+     */
     public void add(Statistic otherStat) {
         filesCount.getAndAdd(otherStat.filesCount.get());
         directoriesCount.getAndAdd(otherStat.directoriesCount.get());
@@ -26,22 +34,41 @@ public class Statistic {
         controlEndTime.set(otherStat.controlEndTime.get());
     }
 
+    /**
+     * Increments files count
+     */
     public void incFilesCount() {
         filesCount.getAndIncrement();
     }
 
+    /**
+     * Increments directories count
+     */
     public void incDirectoriesCount() {
         directoriesCount.getAndIncrement();
     }
 
+    /**
+     * Add to current value of files size new value of current file
+     * @param size - size of current file
+     */
     public void addSummaryFilesSize(long size) {
         summaryFilesSize.getAndAdd(size);
     }
 
+    /**
+     * Set control end time for view total time of work
+     * @param time - value of time after work method compute()
+     */
     public void setControlEndTime(long time) {
         controlEndTime.set(time);
     }
 
+    /**
+     * Human readable format of bytes
+     * @param bytes - input size in bytes
+     * @return - string which consist of readable format of size
+     */
     private String humanReadableByteCount(long bytes) {
         int unit = 1024;
         if (bytes < unit) return bytes + " B";
@@ -50,14 +77,26 @@ public class Statistic {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
+    /**
+     * Set path value
+     * @param path - value of search path
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * Set value of thread count
+     * @param threads - count of threads
+     */
     public void setThreads(int threads) {
         this.threads = threads;
     }
 
+    /**
+     * toString() method that print statistic in table view
+     * @return - result of statistic in table view
+     */
     @Override
     public String toString() {
         StringBuilder separator = new StringBuilder();
