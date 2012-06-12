@@ -43,15 +43,7 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startOptimized(int threadCount) {
-        ForkJoinPool forkJoinPool = new ForkJoinPool(threadCount);
-
-        Statistic stat  = forkJoinPool.invoke(new ForkTaskOptimize(path));
-
-        stat.setPath(path);
-        stat.setThreads(threadCount);
-
-        System.out.println("Optimized algorithm");
-        System.out.println(stat.toString());
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskOptimize(path)), "Optimized");
     }
 
     /**
@@ -59,15 +51,7 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startRecursive(int threadCount) {
-        ForkJoinPool forkJoinPool = new ForkJoinPool(threadCount);
-
-        Statistic stat = forkJoinPool.invoke(new ForkTaskRecursive(path));
-
-        stat.setPath(path);
-        stat.setThreads(threadCount);
-
-        System.out.println("Fully recursive algorithm");
-        System.out.println(stat.toString());
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskRecursive(path)), "Fully recursive");
     }
 
     /**
@@ -75,14 +59,18 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startThread(int threadCount) {
-        ForkJoinPool forkJoinPool = new ForkJoinPool(threadCount);
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskThread(path)), "Fully threaded");
+    }
 
-        Statistic stat = forkJoinPool.invoke(new ForkTaskThread(path));
-
+    /**
+     * Print result of statistic
+     * @param stat - statistic object from task
+     * @param typeOfAlgorithm - name of algorithm
+     */
+    private void printStatistic(Statistic stat, String typeOfAlgorithm) {
         stat.setPath(path);
         stat.setThreads(threadCount);
-
-        System.out.println("Fully threaded algorithm");
+        System.out.println(typeOfAlgorithm + " algorithm");
         System.out.println(stat.toString());
     }
 }
