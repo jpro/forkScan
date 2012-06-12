@@ -1,9 +1,6 @@
 package com.exoplatform.forkScan;
 
 import jsr166y.ForkJoinPool;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class App {
     private static String path = "";
@@ -43,11 +40,37 @@ public class App {
      */
     private void start(int threadCount) {
         ForkJoinPool forkJoinPool = new ForkJoinPool(threadCount);
-        Statistic stat = forkJoinPool.invoke(new ForkTask(path));
+
+        Statistic stat = forkJoinPool.invoke(new ForkTaskRecursive(path));
 
         stat.setPath(path);
         stat.setThreads(threadCount);
 
+        System.out.println("Fully recursive algorithm");
         System.out.println(stat.toString());
+
+
+
+
+        stat = forkJoinPool.invoke(new ForkTaskThread(path));
+
+        stat.setPath(path);
+        stat.setThreads(threadCount);
+
+        System.out.println("Fully threaded algorithm");
+        System.out.println(stat.toString());
+
+
+
+
+
+        stat = forkJoinPool.invoke(new ForkTaskOptimize(path));
+
+        stat.setPath(path);
+        stat.setThreads(threadCount);
+
+        System.out.println("Optimized algorithm");
+        System.out.println(stat.toString());
+
     }
 }
