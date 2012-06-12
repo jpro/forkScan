@@ -1,6 +1,8 @@
 package com.exoplatform.forkScan;
 
 
+import jsr166y.ForkJoinPool;
+
 import java.io.File;
 
 /**
@@ -20,6 +22,10 @@ public class ForkTaskOptimize extends ForkTask {
         listFiles = file.listFiles();
     }
 
+    ForkTaskOptimize() {
+
+    }
+
     /**
      * Give current path and count nested files and directories
      */
@@ -35,12 +41,14 @@ public class ForkTaskOptimize extends ForkTask {
             }
         }
     }
-
+    public Statistic getStat() {
+        return stat;
+    }
     /**
      * Read nested files and directories. If nested directories are over 10,
      * then reading is performed by multitasking otherwise in one task.
      */
-    protected Statistic compute() {
+    public Statistic compute() {
         init();
         if (listFiles != null) {
             if (localDirectoryCount <= 10) {
@@ -74,5 +82,9 @@ public class ForkTaskOptimize extends ForkTask {
         stat.setControlEndTime(System.currentTimeMillis());
 
         return stat;
+    }
+
+    public Statistic getStat(String path, int threadCount) {
+        return new ForkJoinPool(threadCount).invoke(new ForkTaskOptimize(path));
     }
 }

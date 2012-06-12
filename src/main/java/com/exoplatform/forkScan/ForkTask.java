@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * that must be implemented in every inherited class to create own algorithm for calculate size and count
  * of files/directories
  */
-abstract class ForkTask extends RecursiveTask<Statistic> {
+abstract class ForkTask extends RecursiveTask<Statistic> implements Scan {
 
     /**
      * Create statistic for current directory
@@ -34,17 +34,16 @@ abstract class ForkTask extends RecursiveTask<Statistic> {
 
     /**
      * Attempt to get list of files in search path
-     * @param searchPath - path for get list of nested files
      */
-    ForkTask() {
-
-    }
+    ForkTask() {}
 
     /**
      * Compute method for main computation. Must be implemented in inherited class
      * @return - object statistic
      */
-    protected abstract Statistic compute();
+    public abstract Statistic compute();
+
+
 
     /**
      * Check if given files is link

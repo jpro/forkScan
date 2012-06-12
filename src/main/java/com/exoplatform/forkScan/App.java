@@ -47,7 +47,8 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startOptimized(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskOptimize(path)), "Threaded but optimized", threadCount);
+        Scan scan = new ForkTaskOptimize();
+        printStatistic(scan.getStat(path, threadCount), "Threaded but optimized", threadCount);
     }
 
     /**
@@ -55,7 +56,8 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startRecursive(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskRecursive(path)), "Fully recursive (1 thread)", threadCount);
+        Scan scan = new ForkTaskRecursive();
+        printStatistic(scan.getStat(path, threadCount), "Fully recursive (1 thread)", threadCount);
     }
 
     /**
@@ -63,7 +65,8 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startThread(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskThread(path)), "Fully threaded", threadCount);
+        Scan scan = new ForkTaskThread();
+        printStatistic(scan.getStat(path, threadCount), "Fully threaded", threadCount);
     }
 
     /**

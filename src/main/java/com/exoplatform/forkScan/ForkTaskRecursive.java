@@ -1,6 +1,8 @@
 package com.exoplatform.forkScan;
 
 
+import jsr166y.ForkJoinPool;
+
 import java.io.File;
 
 /**
@@ -21,10 +23,14 @@ public class ForkTaskRecursive extends ForkTask {
         currentSearchPath = new File(searchPath);
     }
 
+    ForkTaskRecursive() {
+
+    }
+
     /**
      * Read nested files and directories in recursive form used one thread.
      */
-    protected Statistic compute() {
+    public Statistic compute() {
         stat.add(localRecursiveSearch(currentSearchPath));
         stat.setControlEndTime(System.currentTimeMillis());
         return stat;
@@ -53,5 +59,9 @@ public class ForkTaskRecursive extends ForkTask {
             }
         }
         return localStat;
+    }
+
+    public Statistic getStat(String path, int threadCount) {
+        return new ForkJoinPool(threadCount).invoke(new ForkTaskRecursive(path));
     }
 }
