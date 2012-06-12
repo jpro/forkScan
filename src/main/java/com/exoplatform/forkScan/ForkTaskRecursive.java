@@ -25,7 +25,7 @@ public class ForkTaskRecursive extends ForkTask {
      * Read nested files and directories in recursive form used one thread.
      */
     protected Statistic compute() {
-        stat.add(localRecursive(currentSearchPath));
+        stat.add(localRecursiveSearch(currentSearchPath));
         stat.setControlEndTime(System.currentTimeMillis());
         return stat;
     }
@@ -36,7 +36,7 @@ public class ForkTaskRecursive extends ForkTask {
      * @param directory - current directory
      * @return - Statistic object
      */
-    private Statistic localRecursive(File directory) {
+    private Statistic localRecursiveSearch(File directory) {
         File[] listFiles = directory.listFiles();
         Statistic localStat = new Statistic();
         if (listFiles != null) {
@@ -46,7 +46,7 @@ public class ForkTaskRecursive extends ForkTask {
                 }
                 if (!isLink(currentFile) && currentFile.isDirectory()) {
                     localStat.incDirectoriesCount();
-                    localStat.add(localRecursive(currentFile));
+                    localStat.add(localRecursiveSearch(currentFile));
                 } else if(currentFile.isFile() && !isLink(currentFile)) {
                     localStat.incFilesCount();
                 }
