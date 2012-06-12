@@ -23,6 +23,10 @@ public class Statistic {
         this.controlStartTime.set(startTime);
     }
 
+    public Statistic() {
+
+    }
+
     /**
      * Summarize two objects of statistic for store general stats value
      * @param otherStat - other input object of statistic

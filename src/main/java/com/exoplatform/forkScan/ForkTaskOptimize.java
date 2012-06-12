@@ -3,6 +3,13 @@ package com.exoplatform.forkScan;
 
 import java.io.File;
 
+/**
+ * Class that allow to calculate files size, directories and files count with optimizations.
+ * First, algorithm view current path. If nested directories are over 10, then algorithm
+ * create tasks on this directories and then forks them. If nested directories in forked task are over 10 again -
+ * algorithm start optimization again. Else if nested directories less then 10 algorithm doesn't create separate
+ * tasks and calculate files/directories count and size directly.
+ */
 public class ForkTaskOptimize extends ForkTask {
     /**
      * Attempt to get list of files in search path

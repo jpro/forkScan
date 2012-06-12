@@ -3,7 +3,13 @@ package com.exoplatform.forkScan;
 
 import java.io.File;
 
+/**
+ * Class that allow to calculate files size, directories and files count without optimizations only on threads.
+ * Each viewed directory is a separate task that adds to collection. Collection forks and algorithm find own
+ * list of directories for each task. Then algorithm performed for to each task.
+ */
 public class ForkTaskThread extends ForkTask {
+
     /**
      * Attempt to get list of files in search path
      * @param searchPath - path for get list of nested files

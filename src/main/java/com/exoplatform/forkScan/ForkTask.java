@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Class, that implement algorithm for reading files and dirs from given path
+ * Class, that is based for calculate count of files/directories and files size. It has abstract method compute()
+ * that must be implemented in every inherited class to create own algorithm for calculate size and count
+ * of files/directories
  */
 abstract class ForkTask extends RecursiveTask<Statistic> {
 

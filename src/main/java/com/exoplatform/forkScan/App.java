@@ -2,6 +2,10 @@ package com.exoplatform.forkScan;
 
 import jsr166y.ForkJoinPool;
 
+/**
+ * Main class that contains a entry point and start each algorithm for same path to view different between
+ * implementations of various algorithms.
+ */
 public class App {
     private static String path = "";
     private static int threadCount = 0;
@@ -33,7 +37,7 @@ public class App {
 
         App app = new App();
 
-        app.startRecursive(threadCount);
+        app.startRecursive(1);
         app.startThread(threadCount);
         app.startOptimized(threadCount);
     }
@@ -43,7 +47,7 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startOptimized(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskOptimize(path)), "Optimized");
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskOptimize(path)), "Threaded but optimized");
     }
 
     /**
@@ -51,7 +55,7 @@ public class App {
      * @param threadCount - parallelism level.
      */
     private void startRecursive(int threadCount) {
-        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskRecursive(path)), "Fully recursive");
+        printStatistic(new ForkJoinPool(threadCount).invoke(new ForkTaskRecursive(path)), "Fully recursive (1 thread)");
     }
 
     /**
