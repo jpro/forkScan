@@ -36,15 +36,6 @@ path - path to view files
 
 thread_count - count of threads, must be in range of 1 and 100
 
-#### ScreenShots:
-http://img402.imageshack.us/img402/81/shot1r.png
-
-http://img854.imageshack.us/img854/9711/shot2.png
-
-http://img687.imageshack.us/img687/4302/shot3x.png
-
-http://img560.imageshack.us/img560/391/shot4.png
-
 #### Result for view /usr
 
 	Fully recursive (1 thread) algorithm
