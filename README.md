@@ -23,7 +23,7 @@ forkScan is a utilite that help you calculate files size, file and directories c
 Download all files.
 Go to folder which consist compile.sh. Then run in command line:
 
-	#chmod +x
+	#chmod +x compile.sh
 
 	#./compile.sh
 
