@@ -62,11 +62,11 @@ ScanRecursive algorithm doesn't require thread count.
 
 #### Description
 
-- **Recursive algorithm** perfom calculations in one thread with no optimizations. Simple iteration on each file and forlder in search path.
+- **Recursive algorithm(ScanRecursive)** perfom calculations in one thread with no optimizations. Simple iteration on each file and forlder in search path.
 
-- **Only threads algorithm** perform calculations with specify threads count. Each viewed directory is a future task, which will be runned to view nested files and directories.
+- **Only threads algorithm(ScanThread)** perform calculations with specify threads count. Each viewed directory is a future task, which will be runned to view nested files and directories.
 
-- **Optimized algorithm** perform calculations with specify optimizations. When application view specify path it count nested directories, if they are more than 10, then current application work as previous algorithm. But if directories count are less than 10 application view nested directories directly with recursive algorithm. 
+- **Optimized algorithm(ScanOptimize)** perform calculations with specify optimizations. When application view specify path it count nested directories, if they are more than 10, then current application work as previous algorithm. But if directories count are less than 10 application view nested directories directly with recursive algorithm. 
 
 ****
 
