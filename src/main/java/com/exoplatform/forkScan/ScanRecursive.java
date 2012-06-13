@@ -21,10 +21,7 @@ public final class ScanRecursive extends ScanTask {
         currentSearchPath = new File(searchPath);
     }
 
-    /**
-     * Default constructor
-     */
-    ScanRecursive() {}
+    public ScanRecursive() {}
 
     /**
      * Read nested files and directories in recursive form used one thread.

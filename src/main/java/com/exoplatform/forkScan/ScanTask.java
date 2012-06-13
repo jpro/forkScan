@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * that must be implemented in every inherited class to create own algorithm for calculate size and count
  * of files/directories
  */
-abstract class ScanTask extends RecursiveTask<Statistic> implements Scan {
+abstract class ScanTask extends RecursiveTask<Statistic> implements Scanable {
 
     /**
      * Defined thread count
@@ -37,10 +37,7 @@ abstract class ScanTask extends RecursiveTask<Statistic> implements Scan {
      */
     protected ArrayList<ScanTask> scanTaskList = new ArrayList<ScanTask>();
 
-    /**
-     * Attempt to get list of files in search path
-     */
-    ScanTask() {}
+    public ScanTask() {}
 
     /**
      * Compute method for main computation. Must be implemented in inherited class

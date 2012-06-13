@@ -19,10 +19,7 @@ public final class ScanThread extends ScanTask {
         localFileList = file.listFiles();
     }
 
-    /**
-     * Default constructor
-     */
-    ScanThread() {}
+    public ScanThread() {}
 
     /**
      * Read nested files and directories. If nested directories are over 10,

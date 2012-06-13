@@ -21,10 +21,7 @@ public final class ScanOptimize extends ScanTask {
         localFileList = file.listFiles();
     }
 
-    /**
-     * Default constructor
-     */
-    ScanOptimize() {}
+    public ScanOptimize() {}
 
     /**
      * Give current path and count nested files and directories.
