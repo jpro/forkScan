@@ -31,18 +31,38 @@ Go to folder which consist compile.sh. Then run in command line:
 
 	#cd target
 
-	#java -jar forkScan.jar path
+	#./run.sh
 
-where:
 
-path - path to view files
+or manualy run:
+
+	#chmod +x compile.sh
+
+	#./compile.sh
+
+	#cd target && java -jar forkScan.jar path algorithm [thread count]
+
+where
+
+- **path** - path to view
+
+- **algorithm** - one of three algorithm:
+	- ScanRecursive
+	- ScanThread
+	- ScanOptimize
+
+- **thread count** - thread count which application will be used:
+	- min value **1**
+	- max value **100**
+	- def value **2**
+ScanRecursive algorithm doesn't require thread count.
 ****
 
 #### Description
 
 - **Recursive algorithm** perfom calculations in one thread with no optimizations. Simple iteration on each file and forlder in search path.
 
-- **Only threads algorythm** perform calculations with specify threads count. Each viewed directory is a future task, which will be runned to view nested files and directories.
+- **Only threads algorithm** perform calculations with specify threads count. Each viewed directory is a future task, which will be runned to view nested files and directories.
 
 - **Optimized algorithm** perform calculations with specify optimizations. When application view specify path it count nested directories, if they are more than 10, then current application work as previous algorithm. But if directories count are less than 10 application view nested directories directly with recursive algorithm. 
 ****
