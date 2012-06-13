@@ -15,7 +15,7 @@ abstract class ScanTask extends RecursiveTask<Statistic> implements Scanable {
     /**
      * Define thread count.
      */
-    protected int threadCount = 2;
+    protected int threadCount;
 
     /**
      * Create object of statistic for current directory which consist of files/directories count, summary files size.
