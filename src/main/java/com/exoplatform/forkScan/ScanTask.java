@@ -7,48 +7,41 @@ import java.util.ArrayList;
 
 /**
  * Class, that is based for calculate count of files/directories and files size. It has abstract method compute()
- * that must be implemented in every inherited class to create own algorithm for calculate size and count
- * of files/directories
+ * that must be implemented in every inherited class to create own algorithm for calculate size and count of files
+ * and directories.
  */
 abstract class ScanTask extends RecursiveTask<Statistic> implements Scanable {
 
     /**
-     * Defined thread count
+     * Define thread count.
      */
-    protected final int THREAD_COUNT = 2;
+    protected int threadCount = 2;
 
     /**
-     * Define one thread to recursive algorithm
-     */
-    protected final int THREAD_COUNT_RECURSIVE = 1;
-
-    /**
-     * Create statistic for current directory
+     * Create object of statistic for current directory which consist of files/directories count, summary files size.
      */
     protected Statistic innerStatistic = new Statistic(System.currentTimeMillis());
 
     /**
-     * List of files and directories in current path
+     * List of files and directories in current path.
      */
     protected File[] localFileList;
 
     /**
-     * Nested directories is a future task
+     * Nested directories is a future task.
      */
     protected ArrayList<ScanTask> scanTaskList = new ArrayList<ScanTask>();
 
-    public ScanTask() {}
-
     /**
-     * Compute method for main computation. Must be implemented in inherited class
-     * @return - object statistic
+     * Compute method for main computation. Must be implemented in inherited class.
+     * @return - Statistic object.
      */
     protected abstract Statistic compute();
 
     /**
-     * Check if given files is link
-     * @param file - current file for check
-     * @return - true if file is link and false - if file isn't link
+     * Check if given file is a symbolic link.
+     * @param file - current file for check.
+     * @return - true if file is a symbolic link else - return false.
      */
     protected boolean isLink(File file) {
         String canonicalPath = "";
