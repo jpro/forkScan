@@ -1,10 +1,5 @@
 #!/bin/bash
-rm -r -f target
-mvn install
-cd target/classes
-jar -cvfm forkScan.jar ../../src/MANIFEST.MF com/exoplatform/forkScan/*.class
-cd ..
-rm *.jar
-mv classes/forkScan.jar ./forkScan.jar
-mv classes/jsr166y-1.7.0.jar ./jsr166y-1.7.0.jar
-rm -r classes maven-archiver
+mvn clean install
+cd target
+ls -l | awk -F'[0-9][0-9]:[0-9][0-9]' '/^d/{print $NF}'| xargs -i rm -rf '{}' \;
+mv fork*.jar forkScan.jar
