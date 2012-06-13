@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Created-By: 1.6.0_32 (Sun Microsystems Inc.)
-Main-Class: com.exoplatform.forkScan.App
-Class-Path: jsr166y-1.7.0.jar
-
