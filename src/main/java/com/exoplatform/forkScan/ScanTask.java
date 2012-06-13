@@ -13,6 +13,16 @@ import java.util.ArrayList;
 abstract class ScanTask extends RecursiveTask<Statistic> implements Scan {
 
     /**
+     * Defined thread count
+     */
+    protected final int THREAD_COUNT = 2;
+
+    /**
+     * Define one thread to recursive algorithm
+     */
+    protected final int THREAD_COUNT_RECURSIVE = 1;
+
+    /**
      * Create statistic for current directory
      */
     protected Statistic innerStatistic = new Statistic(System.currentTimeMillis());

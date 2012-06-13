@@ -88,6 +88,7 @@ public final class ScanOptimize extends ScanTask {
 
         resultStatistic.setPath(path);
         resultStatistic.setThreads(THREAD_COUNT);
+        resultStatistic.setAlgorithmType("Optimized algorithm:");
 
         return resultStatistic;
     }

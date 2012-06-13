@@ -12,14 +12,4 @@ public interface Scan {
      * @return - object of statistic
      */
     public Statistic getStat(String path);
-
-    /**
-     * Defined thread count
-     */
-    public int THREAD_COUNT = 2;
-
-    /**
-     * Define one thread to recursive algorithm
-     */
-    public int THREAD_COUNT_RECURSIVE = 1;
 }

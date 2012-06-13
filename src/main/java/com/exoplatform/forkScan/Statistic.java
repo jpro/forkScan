@@ -14,6 +14,7 @@ public class Statistic {
     private AtomicLong controlStartTime = new AtomicLong(0);
     private String path = "";
     private int threads = 0;
+    private String algorithmType = "";
 
     /**
      * Constructor that receives start time in milliseconds for calculate how long algorithm work
@@ -106,6 +107,14 @@ public class Statistic {
         this.threads = threads;
     }
 
+    public String getAlgorithmType() {
+        return algorithmType;
+    }
+
+    public void setAlgorithmType(String algorithmType) {
+        this.algorithmType = algorithmType;
+    }
+
     /**
      * toString() method that print statistic in table view
      * @return - result of statistic in table view
@@ -117,6 +126,7 @@ public class Statistic {
         separator.append("\n");
 
         StringBuilder result = new StringBuilder();
+        result.append(getAlgorithmType() + "\n");
         result.append(separator.toString());
         result.append(String.format("|%-20s|%8s|%12s|%11s|%30s|%12s|\n", "Path", "Threads", "Directories", "Files", "Summary files size", "Used time"));
         result.append(separator.toString());

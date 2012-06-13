@@ -1,5 +1,8 @@
 package com.exoplatform.forkScan;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Main class that contains a entry point and start each algorithm for same path to view different between
  * implementations of various algorithms.
@@ -17,51 +20,34 @@ public class App {
             System.exit(-1);
         }
 
-        try {
-            path = args[0];
-        } catch (IndexOutOfBoundsException ex) {
+        if (args.length == 0) {
             System.out.println("Wrong argument.");
             System.exit(-1);
         }
+        path = args[0];
 
-        App app = new App();
+        String[] algorithms = new String[]{
+                "ScanRecursive",
+                "ScanThread",
+                "ScanOptimize"
+        };
 
-        app.startRecursive();
-        app.startThread();
-        app.startOptimized();
-    }
-
-    /**
-     * Start method. Run task with optimized calculate algorithm.
-     */
-    private void startOptimized() {
-        Scan scan = new ScanOptimize();
-        Statistic statistic = scan.getStat(path);
-
-        System.out.println("Optimized algorithm:");
-        System.out.println(statistic.toString());
-    }
-
-    /**
-     * Start method. Run task with no optimizations. Task start in one thread,
-     * that calculate all work in one recursive method.
-     */
-    private void startRecursive() {
-        Scan scan = new ScanRecursive();
-        Statistic statistic = scan.getStat(path);
-
-        System.out.println("Recursive algorithm:");
-        System.out.println(statistic.toString());
-    }
-
-    /**
-     * Start method. Run task with no optimizations. Tasks starts only on threads.
-     */
-    private void startThread() {
-        Scan scan = new ScanThread();
-        Statistic statistic = scan.getStat(path);
-
-        System.out.println("Only on threads algorithm:");
-        System.out.println(statistic.toString());
+        try {
+            Class cl = Class.forName("com.exoplatform.forkScan.Scan");
+            for (String currentAlgorithm: algorithms) {
+                Method m = cl.getDeclaredMethod("getStat", String.class);
+                System.out.println(m.invoke(Class.forName("com.exoplatform.forkScan." + currentAlgorithm).newInstance(), path));
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -68,6 +68,7 @@ public final class ScanRecursive extends ScanTask {
 
         resultStatistic.setPath(path);
         resultStatistic.setThreads(THREAD_COUNT_RECURSIVE);
+        resultStatistic.setAlgorithmType("Recursive algorithm:");
 
         return resultStatistic;
     }

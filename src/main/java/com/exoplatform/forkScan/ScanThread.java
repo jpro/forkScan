@@ -60,6 +60,7 @@ public final class ScanThread extends ScanTask {
 
         resultStatistic.setPath(path);
         resultStatistic.setThreads(THREAD_COUNT);
+        resultStatistic.setAlgorithmType("Only on threads algorithm:");
 
         return resultStatistic;
     }
