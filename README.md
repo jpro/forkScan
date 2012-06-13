@@ -69,3 +69,6 @@ path - path to view files
 	----------------------------------------------------------------------------------------------------
 	|/usr                |       2|        9882|     119710|        4383390289b(  4,1 GiB)|      5382ms|
 	----------------------------------------------------------------------------------------------------
+****
+#### Conclusion
+From result of work of these algorithms we can say, that multithreading applications with some optimizations are wins before non multitasking applications. Multitasking increase speed of the program.
