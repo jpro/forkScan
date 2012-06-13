@@ -66,6 +66,7 @@ ScanRecursive algorithm doesn't require thread count.
 - **Only threads algorithm** perform calculations with specify threads count. Each viewed directory is a future task, which will be runned to view nested files and directories.
 
 - **Optimized algorithm** perform calculations with specify optimizations. When application view specify path it count nested directories, if they are more than 10, then current application work as previous algorithm. But if directories count are less than 10 application view nested directories directly with recursive algorithm. 
+
 ****
 
 #### Result for view /usr
