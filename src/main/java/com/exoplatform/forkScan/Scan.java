@@ -9,8 +9,17 @@ public interface Scan {
     /**
      * Retrieve statistic of work algorithm
      * @param path - path which must be viewed
-     * @param threadCount - threads count //TODO implement in classes with constant
      * @return - object of statistic
      */
-    public Statistic getStat(String path, int threadCount);
+    public Statistic getStat(String path);
+
+    /**
+     * Defined thread count
+     */
+    public int THREAD_COUNT = 2;
+
+    /**
+     * Define one thread to recursive algorithm
+     */
+    public int THREAD_COUNT_RECURSIVE = 1;
 }

@@ -23,9 +23,10 @@ public class Statistic {
         this.controlStartTime.set(startTime);
     }
 
-    public Statistic() {
-
-    }
+    /**
+     * Default constructor
+     */
+    public Statistic() {}
 
     /**
      * Summarize two objects of statistic for store general stats value
@@ -50,6 +51,14 @@ public class Statistic {
      */
     public void incDirectoriesCount() {
         directoriesCount.getAndIncrement();
+    }
+
+    /**
+     * Return directories count for optimized algorithm
+     * @return - directories count
+     */
+    public int getDirectoriesCount() {
+        return directoriesCount.get();
     }
 
     /**

@@ -1,14 +1,11 @@
 package com.exoplatform.forkScan;
 
-import jsr166y.ForkJoinPool;
-
 /**
  * Main class that contains a entry point and start each algorithm for same path to view different between
  * implementations of various algorithms.
  */
 public class App {
     private static String path = "";
-    private static int threadCount = 0;
 
     /**
      * Main method
@@ -16,68 +13,55 @@ public class App {
      */
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.out.println("Usage: java -jar forkScan.jar \"path\" \"thread count\"\nThread count must be in range of 1 and 100");
+            System.out.println("Usage: java -jar forkScan.jar \"path\"");
             System.exit(-1);
         }
 
         try {
             path = args[0];
-            threadCount = Integer.parseInt(args[1]);
-            if (threadCount <= 0 || threadCount > 100) throw new IllegalArgumentException("Threads count is abnormal.");
-        } catch (IndexOutOfBoundsException ex1) {
+        } catch (IndexOutOfBoundsException ex) {
             System.out.println("Wrong argument.");
-            System.exit(-1);
-        } catch (NumberFormatException ex2) {
-            System.out.println("Wrong argument.");
-            System.exit(-1);
-        } catch (IllegalArgumentException ex3) {
-            System.out.println(ex3.getMessage());
             System.exit(-1);
         }
 
         App app = new App();
 
-        app.startRecursive(1);
-        app.startThread(threadCount);
-        app.startOptimized(threadCount);
+        app.startRecursive();
+        app.startThread();
+        app.startOptimized();
     }
 
     /**
-     * Start method. Run task with given parallelism level.
-     * @param threadCount - parallelism level.
+     * Start method. Run task with optimized calculate algorithm.
      */
-    private void startOptimized(int threadCount) {
-        Scan scan = new ForkTaskOptimize();
-        printStatistic(scan.getStat(path, threadCount), "Threaded but optimized", threadCount);
+    private void startOptimized() {
+        Scan scan = new ScanOptimize();
+        Statistic statistic = scan.getStat(path);
+
+        System.out.println("Optimized algorithm:");
+        System.out.println(statistic.toString());
     }
 
     /**
-     * Start method. Run task with given parallelism level.
-     * @param threadCount - parallelism level.
+     * Start method. Run task with no optimizations. Task start in one thread,
+     * that calculate all work in one recursive method.
      */
-    private void startRecursive(int threadCount) {
-        Scan scan = new ForkTaskRecursive();
-        printStatistic(scan.getStat(path, threadCount), "Fully recursive (1 thread)", threadCount);
+    private void startRecursive() {
+        Scan scan = new ScanRecursive();
+        Statistic statistic = scan.getStat(path);
+
+        System.out.println("Recursive algorithm:");
+        System.out.println(statistic.toString());
     }
 
     /**
-     * Start method. Run task with given parallelism level.
-     * @param threadCount - parallelism level.
+     * Start method. Run task with no optimizations. Tasks starts only on threads.
      */
-    private void startThread(int threadCount) {
-        Scan scan = new ForkTaskThread();
-        printStatistic(scan.getStat(path, threadCount), "Fully threaded", threadCount);
-    }
+    private void startThread() {
+        Scan scan = new ScanThread();
+        Statistic statistic = scan.getStat(path);
 
-    /**
-     * Print result of statistic
-     * @param stat - statistic object from task
-     * @param typeOfAlgorithm - name of algorithm
-     */
-    private void printStatistic(Statistic stat, String typeOfAlgorithm, int threads) {
-        stat.setPath(path);
-        stat.setThreads(threads);
-        System.out.println(typeOfAlgorithm + " algorithm");
-        System.out.println(stat.toString());
+        System.out.println("Only on threads algorithm:");
+        System.out.println(statistic.toString());
     }
 }
