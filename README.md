@@ -1,7 +1,8 @@
 ##forkScan
 
 #### What is it?
-forkScan is a utilite that help you calculate files size, file and directories count in specify path. It used fork and join framework from jdk 1.7 but implement with fork and join library that ported to 1.6 version. 
+forkScan is a utilite that help you calculate files size, file and directories count in specify path. It used fork and join framework from jdk 1.7 but implement with fork and join library that ported to 1.6 version.
+**** 
 
 #### System Requirments
     JDK:
@@ -18,6 +19,7 @@ forkScan is a utilite that help you calculate files size, file and directories c
 
     Other tools:
       Maven 2 or higher.(For compilation)
+****
 
 #### Installing forkScan
 Download all files.
@@ -30,9 +32,20 @@ Go to folder which consist compile.sh. Then run in command line:
 	#cd target
 
 	#java -jar forkScan.jar path
+
 where:
 
 path - path to view files
+****
+
+#### Description
+
+- **Recursive algorithm** perfom calculations in one thread with no optimizations. Simple iteration on each file and forlder in search path.
+
+- **Only threads algorythm** perform calculations with specify threads count. Each viewed directory is a future task, which will be runned to view nested files and directories.
+
+- **Optimized algorithm** perform calculations with specify optimizations. When application view specify path it count nested directories, if they are more than 10, then current application work as previous algorithm. But if directories count are less than 10 application view nested directories directly with recursive algorithm. 
+****
 
 #### Result for view /usr
 
@@ -40,19 +53,19 @@ path - path to view files
 	----------------------------------------------------------------------------------------------------
 	|Path                | Threads| Directories|      Files|            Summary files size|   Used time|
 	----------------------------------------------------------------------------------------------------
-	|/usr                |       1|        9882|     119710|        4383390289b(  4,1 GiB)|      6751ms|
+	|/usr                |       1|        9882|     119710|        4383390289b(  4,1 GiB)|      6560ms|
 	----------------------------------------------------------------------------------------------------
 
 	Only on threads algorithm:
 	----------------------------------------------------------------------------------------------------
 	|Path                | Threads| Directories|      Files|            Summary files size|   Used time|
 	----------------------------------------------------------------------------------------------------
-	|/usr                |       2|        9882|     119710|        4383390289b(  4,1 GiB)|      4231ms|
+	|/usr                |       2|        9882|     119710|        4383390289b(  4,1 GiB)|      5542ms|
 	----------------------------------------------------------------------------------------------------
 
 	Optimized algorithm:
 	----------------------------------------------------------------------------------------------------
 	|Path                | Threads| Directories|      Files|            Summary files size|   Used time|
 	----------------------------------------------------------------------------------------------------
-	|/usr                |       2|        9882|     119710|        4383390289b(  4,1 GiB)|      3692ms|
+	|/usr                |       2|        9882|     119710|        4383390289b(  4,1 GiB)|      5382ms|
 	----------------------------------------------------------------------------------------------------
