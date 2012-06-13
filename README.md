@@ -29,32 +29,30 @@ Go to folder which consist compile.sh. Then run in command line:
 
 	#cd target
 
-	#java -jar forkScan.jar path thread_count
+	#java -jar forkScan.jar path
 where:
 
 path - path to view files
 
-thread_count - count of threads, must be in range of 1 and 100
-
 #### Result for view /usr
 
-	Fully recursive (1 thread) algorithm
+	Recursive algorithm:
 	----------------------------------------------------------------------------------------------------
 	|Path                | Threads| Directories|      Files|            Summary files size|   Used time|
 	----------------------------------------------------------------------------------------------------
-	|/usr                |       1|        9882|     119710|        4426701393b(  4,1 GiB)|      6807ms|
+	|/usr                |       1|        9882|     119710|        4383390289b(  4,1 GiB)|      6296ms|
 	----------------------------------------------------------------------------------------------------
 
-	Fully threaded algorithm
+	Only on threads algorithm:
 	----------------------------------------------------------------------------------------------------
 	|Path                | Threads| Directories|      Files|            Summary files size|   Used time|
 	----------------------------------------------------------------------------------------------------
-	|/usr                |       2|        9882|     119710|        4426701393b(  4,1 GiB)|      3705ms|
+	|/usr                |       2|        9882|     119710|        4383390289b(  4,1 GiB)|      3967ms|
 	----------------------------------------------------------------------------------------------------
 
-	Threaded but optimized algorithm
+	Optimized algorithm:
 	----------------------------------------------------------------------------------------------------
 	|Path                | Threads| Directories|      Files|            Summary files size|   Used time|
 	----------------------------------------------------------------------------------------------------
-	|/usr                |       2|        9882|     119710|        4426701393b(  4,1 GiB)|      3482ms|
+	|/usr                |       2|        9882|     119710|        4383390289b(  4,1 GiB)|      3906ms|
 	----------------------------------------------------------------------------------------------------
