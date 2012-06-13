@@ -56,6 +56,7 @@ where
 	- max value **100**
 	- def value **2**
 ScanRecursive algorithm doesn't require thread count.
+
 ****
 
 #### Description
