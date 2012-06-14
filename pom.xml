@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
-    <groupId>com.exoplatform.for_scan</groupId>
+    <groupId>com.exoplatform.forkScan</groupId>
     <artifactId>forkScanProject</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
     
-    <name>forkAndJoinProject</name>
+    <name>forkScanProject</name>
     <url>http://maven.apache.org</url>
     
     <dependencies>
@@ -46,7 +46,7 @@
 	    <archive>
 	      <manifest>
 		<addClasspath>true</addClasspath>
-		<mainClass>com.exoplatform.forkScan.App</mainClass>
+		<mainClass>com.exoplatform.forkScan.ScanStart</mainClass>
 	      </manifest>
 	      <manifestEntries>
 		<Version>${buildNumber}</Version>
