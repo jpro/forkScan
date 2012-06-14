@@ -4,24 +4,29 @@ import jsr166y.ForkJoinPool;
 import java.io.File;
 
 /**
- * Class that allow to calculate files size recursively in one thread.
+ * Class that allow to calculate files size, directories and files count recursively in one thread.
  */
 public final class ScanRecursive extends ScanTask {
 
     /**
-     * Current path in which we must start viewing the file system for calculations
+     * Current path in which we must start viewing the file system for calculations.
      */
     private File currentSearchPath;
 
     /**
-     * Attempt to get list of files in search path.
-     * @param searchPath - path for get list of nested files
+     * Define one thread for recursive algorithm.
+     */
+    protected int THREAD_COUNT_RECURSIVE = 1;
+
+    public ScanRecursive() {}
+
+    /**
+     * Attempt to get file descriptor from input search path.
+     * @param searchPath - path for get list of nested files.
      */
     ScanRecursive(String searchPath) {
         currentSearchPath = new File(searchPath);
     }
-
-    public ScanRecursive() {}
 
     /**
      * Read nested files and directories in recursive form used one thread.
@@ -34,9 +39,9 @@ public final class ScanRecursive extends ScanTask {
 
     /**
      * Function that recursively view path to search files and directories and then calculate files size and return
-     * Statistic object
-     * @param directory - current directory
-     * @return - Statistic object
+     * Statistic object.
+     * @param directory - current directory.
+     * @return - Statistic object.
      */
     private Statistic recursiveFileSearch(File directory) {
         File[] listFiles = directory.listFiles();
@@ -56,11 +61,13 @@ public final class ScanRecursive extends ScanTask {
     }
 
     /**
-     * Implemented method that return statistic object of work algorithm.
-     * @param path - path which must be viewed
+     * Method start thread that perform algorithm with recursively search files and directories and then calculates
+     * their summary files size.
      * @return - object statistic.
      */
-    public Statistic getStat(String path) {
+    public Statistic getStat(Object... args) {
+        String path = (String)args[0];
+
         Statistic resultStatistic = (new ForkJoinPool(THREAD_COUNT_RECURSIVE).invoke(new ScanRecursive(path)));
 
         resultStatistic.setPath(path);

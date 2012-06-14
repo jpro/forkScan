@@ -16,6 +16,8 @@ public class Statistic {
     private int threads = 0;
     private String algorithmType = "";
 
+    public Statistic() {}
+
     /**
      * Constructor that receives start time in milliseconds for calculate how long algorithm work
      * @param startTime - current time in milliseconds
@@ -23,11 +25,6 @@ public class Statistic {
     public Statistic(long startTime) {
         this.controlStartTime.set(startTime);
     }
-
-    /**
-     * Default constructor
-     */
-    public Statistic() {}
 
     /**
      * Summarize two objects of statistic for store general stats value
@@ -107,10 +104,18 @@ public class Statistic {
         this.threads = threads;
     }
 
+    /**
+     * Get algorithm type name
+     * @return - name of algorithm used
+     */
     public String getAlgorithmType() {
         return algorithmType;
     }
 
+    /**
+     * Set algorithm type name
+     * @param algorithmType - name of algorithm
+     */
     public void setAlgorithmType(String algorithmType) {
         this.algorithmType = algorithmType;
     }

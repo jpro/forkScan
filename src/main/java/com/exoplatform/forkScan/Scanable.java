@@ -1,15 +1,15 @@
 package com.exoplatform.forkScan;
 
 /**
- * Interface that define contract which classes that implements this interface must be implement method getStat.
- * This method retrieve statistic for algorithm of calculation files size and files/directories count.
+ * This interface provide one method getStat() that retrieve object of statistic
+ * for particular algorithm.
  */
 public interface Scanable {
 
     /**
-     * Retrieve statistic of work algorithm
-     * @param path - path which must be viewed
+     * Retrieve object of statistic
+     * @param args - contains search path and thread count
      * @return - object of statistic
      */
-    public Statistic getStat(String path);
+    public Statistic getStat(Object... args);
 }

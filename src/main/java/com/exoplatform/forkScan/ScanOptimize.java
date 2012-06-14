@@ -4,7 +4,7 @@ import jsr166y.ForkJoinPool;
 import java.io.File;
 
 /**
- * Class that allow to calculate files size, directories and files count with optimizations.
+ * Class that allow to calculate summary files size, directories and files count with optimizations.
  * First, algorithm view current path. If nested directories are over 10, then algorithm
  * create tasks on this directories and then forks them. If nested directories in forked task are over 10 again -
  * algorithm start optimization again. Else if nested directories less then 10 algorithm doesn't create separate
@@ -12,19 +12,19 @@ import java.io.File;
  */
 public final class ScanOptimize extends ScanTask {
 
+    public ScanOptimize() {}
+
     /**
-     * Attempt to get list of files in search path
-     * @param searchPath - path for get list of nested files
+     * Attempt to get list of files in current path.
+     * @param searchPath - path for get list of nested files.
      */
     ScanOptimize(String searchPath) {
         File file = new File(searchPath);
         localFileList = file.listFiles();
     }
 
-    public ScanOptimize() {}
-
     /**
-     * Give current path and count nested files and directories.
+     * Calculate count of nested files and directories.
      */
     private void countFilesAndDirectories() {
         if (localFileList != null) {
@@ -41,6 +41,7 @@ public final class ScanOptimize extends ScanTask {
     /**
      * Read nested files and directories. If nested directories are over 10,
      * then reading is performed by multitasking otherwise in one task.
+     * @return - Statistic object.
      */
     protected Statistic compute() {
         countFilesAndDirectories();
@@ -76,15 +77,18 @@ public final class ScanOptimize extends ScanTask {
     }
 
     /**
-     * Implemented method that return statistic object of work algorithm.
-     * @param path - path which must be viewed
+     * Method start threads that perform algorithm with optimizations, all viewed directories are future tasks.
+     * Every task run and method calculate summary size of each viewed file and also calculate count of files and
+     * directories.
      * @return - object statistic.
      */
-    public Statistic getStat(String path) {
-        Statistic resultStatistic = (new ForkJoinPool(THREAD_COUNT).invoke(new ScanOptimize(path)));
+    public Statistic getStat(Object... args) {
+        String path = (String)args[0];
+        threadCount = (Integer)args[1];
+        Statistic resultStatistic = (new ForkJoinPool(threadCount).invoke(new ScanOptimize(path)));
 
         resultStatistic.setPath(path);
-        resultStatistic.setThreads(THREAD_COUNT);
+        resultStatistic.setThreads(threadCount);
         resultStatistic.setAlgorithmType("Optimized algorithm:");
 
         return resultStatistic;

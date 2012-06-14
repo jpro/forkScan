@@ -4,26 +4,27 @@ import jsr166y.ForkJoinPool;
 import java.io.File;
 
 /**
- * Class that allow to calculate files size, directories and files count without optimizations only on threads.
+ * Class that allow to calculate summary files size, directories and files count without optimizations only on threads.
  * Each viewed directory is a separate task that adds to collection. Collection forks and algorithm find own
- * list of directories for each task. Then algorithm performed for to each task.
+ * list of directories for each task. And algorithm works again on new tasks.
  */
 public final class ScanThread extends ScanTask {
 
+    public ScanThread() {}
+
     /**
-     * Attempt to get list of files in search path
-     * @param searchPath - path for get list of nested files
+     * Attempt to get file list in current path.
+     * @param searchPath - path for get list of nested files.
      */
     ScanThread(String searchPath) {
         File file = new File(searchPath);
         localFileList = file.listFiles();
     }
 
-    public ScanThread() {}
-
     /**
-     * Read nested files and directories. If nested directories are over 10,
-     * then reading is performed by multitasking otherwise in one task.
+     * Read nested files and directories. Every viewed directory is a future task. Then it adds to collection
+     * which will be forked in future.
+     * @return - Statistic object.
      */
     protected Statistic compute() {
         if (localFileList != null) {
@@ -48,15 +49,19 @@ public final class ScanThread extends ScanTask {
     }
 
     /**
-     * Implemented method that return statistic object of work algorithm.
-     * @param path - path which must be viewed
+     * Method start threads that perform algorithm with no optimizations, all viewed directories are future tasks.
+     * Every task run and method calculate summary size of each viewed file and also calculate count of files and
+     * directories.
+     * their summary files size.
      * @return - object statistic.
      */
-    public Statistic getStat(String path) {
-        Statistic resultStatistic = (new ForkJoinPool(THREAD_COUNT).invoke(new ScanThread(path)));
+    public Statistic getStat(Object... args) {
+        String path = (String)args[0];
+        threadCount = (Integer)args[1];
+        Statistic resultStatistic = (new ForkJoinPool(threadCount).invoke(new ScanThread(path)));
 
         resultStatistic.setPath(path);
-        resultStatistic.setThreads(THREAD_COUNT);
+        resultStatistic.setThreads(threadCount);
         resultStatistic.setAlgorithmType("Only on threads algorithm:");
 
         return resultStatistic;
