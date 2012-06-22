@@ -1,4 +1,4 @@
-##forkScan
+##forkScan.
 
 #### What is it?
 forkScan is a utilite that help you calculate files size, file and directories count in specify path. It used fork and join framework from jdk 1.7 but implement with fork and join library that ported to 1.6 version.
